@@ -70,6 +70,45 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/LS_SqlServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"ServerName": {
+						"type": "String"
+					},
+					"DataBase": {
+						"type": "String"
+					},
+					"username": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_SqlServer_connectionString')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_AzureKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "password"
+					}
+				},
+				"connectVia": {
+					"referenceName": "SHIR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/SHIR')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureKeyVault')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_Parquet')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -110,45 +149,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/LS_SqlServer')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"parameters": {
-					"ServerName": {
-						"type": "String"
-					},
-					"DataBase": {
-						"type": "String"
-					},
-					"username": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_SqlServer_connectionString')]",
-					"password": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "LS_AzureKeyVault",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "password"
-					}
-				},
-				"connectVia": {
-					"referenceName": "SHIR",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/SHIR')]",
-				"[concat(variables('factoryId'), '/linkedServices/LS_AzureKeyVault')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DS_SqlServerTable')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -178,7 +178,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Lookup_all_table",
+						"name": "Lookup",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -209,7 +209,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup_all_table",
+								"activity": "Lookup",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -218,7 +218,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup_all_table').output.value",
+								"value": "@activity('Lookup').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
