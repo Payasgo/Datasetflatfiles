@@ -1,0 +1,9 @@
+{
+	"name": "pipelinemanagement",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0e349034-7b1f-4a57-a78d-7416dc16a46e",
+		"tenantId": "2db0e13c-89f2-4a67-88ce-504c6fb70607"
+	}
+}
