@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup_all_table",
+				"name": "Lookup",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -33,7 +33,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup_all_table",
+						"activity": "Lookup",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -42,7 +42,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup_all_table').output.value",
+						"value": "@activity('Lookup').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -81,41 +81,6 @@
 								"enableStaging": false,
 								"translator": {
 									"type": "TabularTranslator",
-									"mappings": [
-										{
-											"source": {
-												"name": "ProductID",
-												"type": "Int32",
-												"physicalType": "int"
-											},
-											"sink": {
-												"name": "ProductID",
-												"type": "Int32",
-												"physicalType": "INT_32"
-											}
-										},
-										{
-											"source": {
-												"name": "DocumentNode",
-												"physicalType": "hierarchyid"
-											},
-											"sink": {
-												"name": "DocumentNode"
-											}
-										},
-										{
-											"source": {
-												"name": "ModifiedDate",
-												"type": "DateTime",
-												"physicalType": "datetime"
-											},
-											"sink": {
-												"name": "ModifiedDate",
-												"type": "DateTime",
-												"physicalType": "INT_96"
-											}
-										}
-									],
 									"typeConversion": true,
 									"typeConversionSettings": {
 										"allowDataTruncation": true,
